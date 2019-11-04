@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/DD2497-Project-Group-1/slowloris#readme",
   "dependencies": {
-    "net": "^1.0.2"
+    "net": "^1.0.2",
+    "readline-promise": "^1.0.4"
   }
 }
