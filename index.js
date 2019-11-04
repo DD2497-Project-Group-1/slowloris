@@ -20,9 +20,10 @@ function slowlorisAttack() {
   rlp.questionAsync('Which port? ').then(p => {
     rlp.questionAsync('How many connections? ').then(c => {
       const port = p ? p : 3000
+      const connections = c ? c : 5000
       req = createRequest()
 
-      for(let i = 0; i < c; i++) {
+      for(let i = 0; i < connections; i++) {
         sendRequest(req, port)
       }
     })
