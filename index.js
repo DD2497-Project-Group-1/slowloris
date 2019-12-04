@@ -67,7 +67,7 @@ function sendRequest(req, port, finalReq) {
     } else {
       connection.write(req[i])
       i++
-      if (i == req.length && finalReq) {
+      if (i == (req.length - 1) && finalReq) {
         console.log('----Finished final request----')
         process.exit(0)
       }
